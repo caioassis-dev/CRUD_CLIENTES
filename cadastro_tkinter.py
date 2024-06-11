@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter as tk
-
+import backend
+from tkinter import messagebox
 
 def obter_dados_input():
     pass
@@ -12,7 +13,25 @@ def buscar():
     pass
 
 def inserir_dados():
-    pass
+    listaValores = []
+    
+    if nome.get():
+        listaValores.append(nome.get())
+    if sobrenome.get():
+        listaValores.append(sobrenome.get())
+    if email.get():
+        listaValores.append(email.get())
+    if cpf.get():
+        listaValores.append(cpf.get())
+
+    resposta = backend.inserir_dados_backend(listaValores)
+    
+    if resposta != True:
+        tk.messagebox.showinfo("Erro", "Não foi possivel cadastrar, verifique os valores digitados")
+    else:    
+        tk.messagebox.showinfo("Sucesso", "Dados inseridos com sucesso!")
+        
+    return resposta
 
 def atualizar_dados():
     pass

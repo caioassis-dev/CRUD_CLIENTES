@@ -6,7 +6,23 @@ import pdb
 
 
 def buscar_pelo_cpf():
-    pass
+    lista_cpf = []
+    
+    if cpf.get():
+        lista_cpf.append(cpf.get())
+    
+    resposta, row = backend.buscar_pelo_cpf_backend(lista_cpf)
+    text_widget.delete("1.0","end")
+
+    if row == None and resposta != True:
+        tk.messagebox.showinfo("end","Esse cadastro não existe na base de dados!!")
+    else:
+        # adicionei essa linha abaixo para limpar a saida toda vez que for uma noa requisição
+        text_widget.delete("1.0","end")
+        for cpf_ in row:
+            text_widget.insert("end",f"{cpf_}")    
+        
+    return resposta
 
 def buscar_todos_dados():
     
@@ -33,9 +49,10 @@ def inserir_dados():
         listaValores.append(cpf.get())
     
     resposta, row = backend.inserir_dados_backend(listaValores)
-        
-
-    if resposta != True:
+    
+    if resposta != True and row == 'CPF já existe na tabela':
+        tk.messagebox.showinfo("Erro", "CPF já existe no cadastro.")
+    elif resposta != True:
         tk.messagebox.showinfo("Erro", "Não foi possivel cadastrar, verifique os valores digitados")
     else:
         # adicionei essa linha abaixo para limpar a saida toda vez que for uma noa requisição
@@ -49,8 +66,29 @@ def atualizar_dados():
     pass
 
 def deletar_dados_pelo_cpf():
-    pass
+    
+    lista_cpf = []
+    
+    if cpf.get():
+        lista_cpf.append(cpf.get())
+        
+    resposta, row = backend.buscar_pelo_cpf_backend(lista_cpf)
+    resultado = tk.messagebox.askyesno("confirmação", f"Você deseja deletar esse cadastro? {row}")
+    
+    if resultado:
+        resposta, cadastro_deletado = backend.deletar_dados_pelo_cpf_backend(lista_cpf)   
+        tk.messagebox.showinfo("Sucesso", "Cadastro deletado!")    
+    else:
+        tk.messagebox.showinfo("erro", "Cadastro não foi deletado!")
 
+    return resposta
+
+def validar_qtd_cpf(P):
+    # Verifica se o valor inserido tem no máximo 11 caracteres e se é um numero.
+    if len(P) <= 11 and P.isdigit():
+        return True
+    else:
+        return False
 
 # criação da janela principal
 janela = tk.Tk()
@@ -69,14 +107,16 @@ label_cpf = tk.Label(janela, text="CPF: ")
 nome = tk.Entry(janela)
 sobrenome = tk.Entry(janela)
 email = tk.Entry(janela)
-cpf = tk.Entry(janela)
+# adicionei verificacao para apenas 11 posicoes.
+cpf = tk.Entry(janela, validate="key")
+cpf['validatecommand'] = (cpf.register(validar_qtd_cpf), '%P')
 
 # criando botoes
-ver_todos_registros = tk.Button(janela, text="Ver todos registros", command=buscar_todos_dados)
-ver_busca = tk.Button(janela, text="Buscar pelo cpf", command=buscar_pelo_cpf)
-ver_dados_deletados = tk.Button(janela, text="Deletar pelo cpf", command=deletar_dados_pelo_cpf)
-ver_dados_atualizados = tk.Button(janela, text="Atualizar contatos", command=atualizar_dados)
-ver_dados_inseridos = tk.Button(janela, text="Inserir", command=inserir_dados)
+ver_todos_registros = tk.Button(janela, text="Ver todos registros",bg="blue", fg="black", command=buscar_todos_dados)
+ver_busca = tk.Button(janela, text="Buscar pelo cpf",bg="blue", fg="black", command=buscar_pelo_cpf)
+ver_dados_deletados = tk.Button(janela, text="Deletar pelo cpf",bg="red", fg="black", command=deletar_dados_pelo_cpf)
+ver_dados_atualizados = tk.Button(janela, text="Atualizar contatos",bg="yellow", fg="black", command=atualizar_dados)
+ver_dados_inseridos = tk.Button(janela, text="Inserir",bg="green", fg="black", command=inserir_dados)
 
 
 # criando espaço texto vazio para inserir informações e um com scroolbar lateral "widget"

@@ -22,7 +22,7 @@ def buscar_pelo_cpf():
         for cpf_ in row:
             text_widget.insert("end",f"{cpf_}")    
         
-    return resposta
+    return resposta,row
 
 def buscar_todos_dados():
     
@@ -63,7 +63,24 @@ def inserir_dados():
     return resposta
 
 def atualizar_dados():
-    pass
+    resposta,row = buscar_pelo_cpf()
+    text_widget.delete("1.0","end")    
+    text_widget.insert("end",f"Cadastro anterior: {row}\n")
+    
+    # criando dicionario para adicionar o valor para cada chave, para poder 
+    # ver qual valor será feito a atualização. 
+    valores = {}   
+    
+    valores['nome'] = nome.get() if nome.get() else None
+    valores['sobrenome'] = sobrenome.get() if sobrenome.get() else None
+    valores['email'] = email.get() if email.get() else None
+    valores['cpf'] = cpf.get() if cpf.get() else None
+    
+    resposta, row = backend.atualizar_dados_backend(valores,row)
+
+    text_widget.insert("end",f"Cadastro atualizado: {row}\n")
+    return resposta
+
 
 def deletar_dados_pelo_cpf():
     
@@ -112,11 +129,11 @@ cpf = tk.Entry(janela, validate="key")
 cpf['validatecommand'] = (cpf.register(validar_qtd_cpf), '%P')
 
 # criando botoes
-ver_todos_registros = tk.Button(janela, text="Ver todos registros",bg="blue", fg="black", command=buscar_todos_dados)
-ver_busca = tk.Button(janela, text="Buscar pelo cpf",bg="blue", fg="black", command=buscar_pelo_cpf)
-ver_dados_deletados = tk.Button(janela, text="Deletar pelo cpf",bg="red", fg="black", command=deletar_dados_pelo_cpf)
-ver_dados_atualizados = tk.Button(janela, text="Atualizar contatos",bg="yellow", fg="black", command=atualizar_dados)
-ver_dados_inseridos = tk.Button(janela, text="Inserir",bg="green", fg="black", command=inserir_dados)
+ver_todos_registros = tk.Button(janela, text="Ver todos registros", command=buscar_todos_dados)
+ver_busca = tk.Button(janela, text="Buscar pelo cpf", command=buscar_pelo_cpf)
+ver_dados_deletados = tk.Button(janela, text="Deletar pelo cpf", command=deletar_dados_pelo_cpf)
+ver_dados_atualizados = tk.Button(janela, text="Atualizar contatos", command=atualizar_dados)
+ver_dados_inseridos = tk.Button(janela, text="Inserir", command=inserir_dados)
 
 
 # criando espaço texto vazio para inserir informações e um com scroolbar lateral "widget"

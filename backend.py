@@ -91,3 +91,32 @@ def deletar_dados_pelo_cpf_backend(cpf_numero):
     except Exception as e:
         
         return str(e)
+    
+def atualizar_dados_backend(valores,original_data):
+
+    
+    colunas = ['id', 'nome', 'sobrenome', 'email', 'cpf']
+    valores_atualizados = []
+    for valor in original_data:
+        updated_row = list(valor)
+        for i, coluna in enumerate(colunas):
+            if coluna in valores and valores[coluna] is not None:
+                updated_row[i] = valores[coluna]
+        valores_atualizados.append(tuple(updated_row))
+    
+    id_numero = valores_atualizados[0][0]
+    
+    update_values = ", ".join(f"{coluna} = '{valor}'" for coluna, valor in zip(colunas[1:], valores_atualizados[0][1:]))
+    # nessa parte é como se ficasse dessa forma para poder adicionar no banco de dados: 
+    # update_values = "nome = 'Joana', sobrenome = 'Maria', email = 'joana@teste.com', cpf = '10293984756'"
+
+    try:
+        consulta = f""" 
+            UPDATE clientes SET {update_values} WHERE id = {id_numero};
+        """
+        cursor.execute(consulta)
+        conn.commit()
+        return True, valores_atualizados[0]
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return str(e)

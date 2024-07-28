@@ -7,7 +7,7 @@ CRUD de clientes em Python que pode receber e cadastrar um banco de dados com os
 
 <div style="display:inline_block" >
   
- <img align="center" alt="Python" src="https://cdn.picpng.com/logo/language-logo-python-44976.png" style="height:50px; width:auto" target="_blank">
+<img align="center" alt="Python" src="https://www.python.org/static/img/python-logo.png" style="height:50px; width:auto" target="_blank">
  <img align="center" alt="Tkinter" src="https://fiverr-res.cloudinary.com/images/t_thumbnail3_3,q_auto,f_auto/gigs/330582152/original/41eeae0e0f4eedf2ada4a1519c8a0a89469485e0/do-python-tkinter-gui.png" style="height:50px; width:auto" target="_blank">
 <img align="center" alt="SQLite3" src="https://static-00.iconduck.com/assets.00/sqlite-icon-512x227-lvdqy74k.png" style="height:50px; width:auto" target="_blank">
 
